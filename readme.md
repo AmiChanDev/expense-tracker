@@ -1,0 +1,1 @@
+Expense Tracker application made using TypeScript and React
