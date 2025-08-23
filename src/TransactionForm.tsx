@@ -10,7 +10,9 @@ export default function TransactionForm({ onAdd }: TransactionFormProps) {
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        if (!description || Number(amount) === 0 || amount === "") return;
+        if (!description) return;
+        if (Number(amount) === 0) return;
+        if (amount === "-" || amount.trim() === "" || isNaN(Number(amount))) return;
 
         onAdd(description, Number(amount));
         setDescription("");
@@ -23,18 +25,18 @@ export default function TransactionForm({ onAdd }: TransactionFormProps) {
             <form onSubmit={handleSubmit}>
                 <input
                     type="text"
-                    placeholder="Amount (Enter negative for expense)"
+                    placeholder="Amount (- for expense)"
                     value={amount}
                     onChange={(e) => setAmount(e.target.value)}>
                 </input>
-
+                <br></br>
                 <input
                     type="text"
-                    placeholder="Enter income/expense description"
+                    placeholder="Enter description"
                     value={description}
                     onChange={(e) => setDescription(e.target.value)}
                 ></input>
-
+                <br></br>
                 <input type="submit"></input>
             </form>
 

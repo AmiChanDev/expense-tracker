@@ -30,7 +30,7 @@ function App() {
       <ul>
         {transactions.map((t) => (
           <li key={t.id}>
-            {t.description}: {t.amount < 0 ? "-" : "+"}{Math.abs(t.amount)}LKR
+            {t.description}: {t.amount < 0 ? "-" : "+"}{Math.abs(t.amount)} LKR
           </li>
         ))
 
