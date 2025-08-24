@@ -14,16 +14,15 @@ Track your expenses effortlessly with a modern, user-friendly interface and a se
 
 ## 📂 Project Structure
 
-expense-tracker/
-├── frontend/ # React + Vite + TypeScript frontend
-│ ├── src/ # Frontend source code
-│ ├── package.json # Frontend dependencies and scripts
-│ └── ...
-├── backend/ # Node.js + Express + TypeScript backend
-│ ├── src/ # Backend source code
-│ ├── package.json # Backend dependencies and scripts
-│ └── ...
-└── README.md # You're here!
+backend/
+├── src/
+│ ├── server.ts # Entry point
+│ ├── routes/ # API route definitions
+│ └── controllers/ # Request handlers
+├── dist/ # Compiled JS output (after build)
+├── package.json
+├── tsconfig.json
+└── .env
 
 ## 🛠️ Prerequisites
 
@@ -107,7 +106,7 @@ I welcome contributions to make this project even better! Follow these steps to 
 
 ## 📄 License
 
-This project is licensed under the ISC License. See the LICENSE file for details.
+This project is licensed under the MIT License. See the LICENSE file for details.
 
 ## 🌟 Acknowledgments
 
