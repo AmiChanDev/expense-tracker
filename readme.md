@@ -14,15 +14,17 @@ Track your expenses effortlessly with a modern, user-friendly interface and a se
 
 ## 📂 Project Structure
 
+```
 backend/
 ├── src/
-│ ├── server.ts # Entry point
-│ ├── routes/ # API route definitions
-│ └── controllers/ # Request handlers
-├── dist/ # Compiled JS output (after build)
+│   ├── server.ts        # Entry point
+│   ├── routes/          # API route definitions
+│   └── controllers/     # Request handlers
+├── dist/                # Compiled JS output (after build)
 ├── package.json
 ├── tsconfig.json
 └── .env
+```
 
 ## 🛠️ Prerequisites
 
