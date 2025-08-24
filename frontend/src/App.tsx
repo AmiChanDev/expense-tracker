@@ -17,19 +17,25 @@ type Transaction = {
   id: number;
   description: string;
   amount: number;
-  category: string;
+  category_id: number;
 };
 
 type Category = {
   id: number;
   name: string;
-}
+};
 
 function App() {
   const [transactions, setTransactions] = useState<Transaction[]>([]);
+  const [categories, setCategories] = useState<Category[]>([]);
 
+  useEffect(() => {
+    fetch("http://localhost:5000/categories")
+      .then((res) => res.json())
+      .then((data) => setCategories(data))
+      .catch((err) => console.error(err));
+  }, []);
 
-  // Calculate totals
   const income = transactions
     .filter((t) => t.amount > 0)
     .reduce((total, t) => total + t.amount, 0);
@@ -40,20 +46,56 @@ function App() {
 
   const balance = income + expenses;
 
-  // Add a new transaction
-  const addTransaction = (id: number, description: string, amount: number, category: string) => {
-    const newTransaction: Transaction = {
-      id,
-      description,
-      amount,
-      category,
-    };
-    setTransactions([...transactions, newTransaction]);
+  const addTransaction = async (
+    id: number,
+    description: string,
+    amount: number,
+    category_id: number
+  ) => {
+    try {
+      const res = await fetch("http://localhost:5000/transactions", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id, description, amount, category_id }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        console.error("Error: Failed to add transaction");
+        throw new Error("Failed to add transaction");
+      }
+
+
+      setTransactions((prev) => [
+        ...prev,
+        { id: data.id, description, amount, category_id },
+      ]);
+    } catch (err) {
+      console.error(err);
+    }
   };
 
-  // Delete a transaction
-  const deleteTransaction = (id: number) => {
-    setTransactions(transactions.filter((t) => t.id !== id));
+  const deleteTransaction = async (id: number) => {
+    try {
+      const res = await fetch(`http://localhost:5000/transactions/${id}`, {
+        method: "DELETE",
+      });
+
+      if (!res.ok) {
+        console.error("Error: Failed deleting a transaction");
+        return;
+      }
+
+      setTransactions((prev) => prev.filter((t) => t.id !== id));
+    } catch (err) {
+      console.error("Delete error:", err);
+    }
+  };
+
+  const getCategoryName = (id: number) => {
+    const category = categories.find((c) => c.id === id);
+    return category ? category.name : "Unknown";
   };
 
   return (
@@ -62,10 +104,8 @@ function App() {
         Expense Tracker
       </Typography>
 
-      {/* Transaction Form */}
       <TransactionForm onAdd={addTransaction} />
 
-      {/* Transaction List */}
       <Card sx={{ mb: 3 }}>
         <CardContent>
           <Typography variant="h5" gutterBottom>
@@ -82,8 +122,10 @@ function App() {
                 }
               >
                 <ListItemText
-                  primary={`[${t.category}] ${t.description}`}
-                  secondary={`${t.amount < 0 ? "-" : "+"}${Math.abs(t.amount)} LKR`}
+                  primary={`[${t.id}] ${t.description}`}
+                  secondary={`${t.amount < 0 ? "-" : "+"}${Math.abs(
+                    t.amount
+                  )} LKR (Category: ${getCategoryName(t.category_id)})`}
                 />
               </ListItem>
             ))}
@@ -91,18 +133,21 @@ function App() {
         </CardContent>
       </Card>
 
-      {/* Balance Section */}
       <Card sx={{ mb: 3 }}>
         <CardContent>
           <Typography variant="h5" gutterBottom>
             Balance: {balance.toLocaleString()} LKR
           </Typography>
           <Grid container spacing={2}>
-            <Grid sx={{ flex: 1 }}>
-              <Typography sx={{ color: "green" }}>Income: {income.toLocaleString()} LKR</Typography>
+            <Grid>
+              <Typography sx={{ color: "green" }}>
+                Income: {income.toLocaleString()} LKR
+              </Typography>
             </Grid>
-            <Grid sx={{ flex: 1 }}>
-              <Typography sx={{ color: "red" }}>Expenses: {Math.abs(expenses).toLocaleString()} LKR</Typography>
+            <Grid>
+              <Typography sx={{ color: "red" }}>
+                Expenses: {Math.abs(expenses).toLocaleString()} LKR
+              </Typography>
             </Grid>
           </Grid>
         </CardContent>
