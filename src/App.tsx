@@ -14,7 +14,6 @@ import {
 import DeleteIcon from "@mui/icons-material/Delete";
 
 type Transaction = {
-  id: number;
   description: string;
   amount: number;
   category: string;
@@ -37,7 +36,6 @@ function App() {
   // Add a new transaction
   const addTransaction = (description: string, amount: number, category: string) => {
     const newTransaction: Transaction = {
-      id: new Date().getTime(), // unique ID
       description,
       amount,
       category,
@@ -46,63 +44,64 @@ function App() {
   };
 
   // Delete a transaction
-  const deleteTransaction = (id: number) => {
-    setTransactions(transactions.filter((t) => t.id !== id));
-  };
 
-  return (
-    <Box sx={{ maxWidth: 500, margin: "auto", mt: 4, px: 2 }}>
-      <Typography variant="h3" gutterBottom align="center">
-        Expense Tracker
-      </Typography>
+  // const deleteTransaction = (id: number) => {
+  //   setTransactions(transactions.filter((t) => t.id !== id));
+  // };
 
-      {/* Transaction Form */}
-      <TransactionForm onAdd={addTransaction} />
+  // return (
+  //   <Box sx={{ maxWidth: 500, margin: "auto", mt: 4, px: 2 }}>
+  //     <Typography variant="h3" gutterBottom align="center">
+  //       Expense Tracker
+  //     </Typography>
 
-      {/* Transaction List */}
-      <Card sx={{ mb: 3 }}>
-        <CardContent>
-          <Typography variant="h5" gutterBottom>
-            Transactions
-          </Typography>
-          <List>
-            {transactions.map((t) => (
-              <ListItem
-                key={t.id}
-                secondaryAction={
-                  <IconButton edge="end" onClick={() => deleteTransaction(t.id)}>
-                    <DeleteIcon />
-                  </IconButton>
-                }
-              >
-                <ListItemText
-                  primary={`[${t.category}] ${t.description}`}
-                  secondary={`${t.amount < 0 ? "-" : "+"}${Math.abs(t.amount)} LKR`}
-                />
-              </ListItem>
-            ))}
-          </List>
-        </CardContent>
-      </Card>
+  //     {/* Transaction Form */}
+  //     <TransactionForm onAdd={addTransaction} />
 
-      {/* Balance Section */}
-      <Card sx={{ mb: 3 }}>
-        <CardContent>
-          <Typography variant="h5" gutterBottom>
-            Balance: {balance.toLocaleString()} LKR
-          </Typography>
-          <Grid container spacing={2}>
-            <Grid sx={{ flex: 1 }}>
-              <Typography sx={{ color: "green" }}>Income: {income.toLocaleString()} LKR</Typography>
-            </Grid>
-            <Grid sx={{ flex: 1 }}>
-              <Typography sx={{ color: "red" }}>Expenses: {Math.abs(expenses).toLocaleString()} LKR</Typography>
-            </Grid>
-          </Grid>
-        </CardContent>
-      </Card>
-    </Box>
-  );
+  //     {/* Transaction List */}
+  //     <Card sx={{ mb: 3 }}>
+  //       <CardContent>
+  //         <Typography variant="h5" gutterBottom>
+  //           Transactions
+  //         </Typography>
+  //         <List>
+  //           {transactions.map((t) => (
+  //             <ListItem
+  //               key={t.id}
+  //               secondaryAction={
+  //                 <IconButton edge="end" onClick={() => deleteTransaction(t.id)}>
+  //                   <DeleteIcon />
+  //                 </IconButton>
+  //               }
+  //             >
+  //               <ListItemText
+  //                 primary={`[${t.category}] ${t.description}`}
+  //                 secondary={`${t.amount < 0 ? "-" : "+"}${Math.abs(t.amount)} LKR`}
+  //               />
+  //             </ListItem>
+  //           ))}
+  //         </List>
+  //       </CardContent>
+  //     </Card>
+
+  //     {/* Balance Section */}
+  //     <Card sx={{ mb: 3 }}>
+  //       <CardContent>
+  //         <Typography variant="h5" gutterBottom>
+  //           Balance: {balance.toLocaleString()} LKR
+  //         </Typography>
+  //         <Grid container spacing={2}>
+  //           <Grid sx={{ flex: 1 }}>
+  //             <Typography sx={{ color: "green" }}>Income: {income.toLocaleString()} LKR</Typography>
+  //           </Grid>
+  //           <Grid sx={{ flex: 1 }}>
+  //             <Typography sx={{ color: "red" }}>Expenses: {Math.abs(expenses).toLocaleString()} LKR</Typography>
+  //           </Grid>
+  //         </Grid>
+  //       </CardContent>
+  //     </Card>
+  //   </Box>
+  // );
 }
 
 export default App;
