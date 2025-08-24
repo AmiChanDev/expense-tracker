@@ -9,3 +9,5 @@ export const db: Pool = mysql.createPool({
   connectionLimit: 10,
   queueLimit: 0,
 });
+
+console.log("connected to database - {expense-tracker}");

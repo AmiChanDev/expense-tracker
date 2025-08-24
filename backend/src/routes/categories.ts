@@ -10,6 +10,7 @@ router.get("/", async (req, res) => {
       "SELECT * FROM category"
     );
     res.json(categoryRows);
+    console.log("Category API GET method called");
   } catch (error) {
     console.log(error);
     res.status(500).json({ error });

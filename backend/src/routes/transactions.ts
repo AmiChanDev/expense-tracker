@@ -19,16 +19,15 @@ router.get("/", async (req, res) => {
 
 router.post("/", async (req, res) => {
   try {
-    const { description, amount, categoryId } = req.body;
+    const { id, description, amount, categoryId } = req.body;
 
     const [result] = await db.query<OkPacket>(
-      "INSERT INTO transactions (description, amount, category) VALUES (?,?,?)",
-      [description, amount, categoryId]
+      "INSERT INTO transactions (id,description, amount, category_id) VALUES (?,?,?,?)",
+      [id, description, amount, categoryId]
     );
 
-    res
-      .status(201)
-      .json({ message: "Transaction Inserted", id: result.insertId });
+    res.status(201).json({ message: "Transaction Inserted", id });
+    console.log(`Transaction added with ID:${id}`);
   } catch (error) {
     console.log(error);
     res.status(500).json({ error });
@@ -47,6 +46,7 @@ router.delete("/:id", async (req, res) => {
       return res.status(404).json({ error: "Transaction not found" });
 
     res.json({ deletedId: id });
+    console.log(`Transaction deleted with ID:${id}`);
   } catch (error) {
     console.log(error);
     res.status(500).json({ error });

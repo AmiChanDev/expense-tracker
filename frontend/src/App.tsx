@@ -14,6 +14,7 @@ import {
 import DeleteIcon from "@mui/icons-material/Delete";
 
 type Transaction = {
+  id: number;
   description: string;
   amount: number;
   category: string;
@@ -25,21 +26,8 @@ type Category = {
 }
 
 function App() {
-  const [category, setCategories] = useState<Category[]>([]);
-
-  useEffect(() => {
-    fetch("http://localhost:5000/categories")
-      .then((res) => res.json())
-      .then((data) => {
-        setCategories(data);
-        console.log(data);
-      })
-      .catch((err) => console.error(err));
-  }, []);
-
-
-
   const [transactions, setTransactions] = useState<Transaction[]>([]);
+
 
   // Calculate totals
   const income = transactions
@@ -53,8 +41,9 @@ function App() {
   const balance = income + expenses;
 
   // Add a new transaction
-  const addTransaction = (description: string, amount: number, category: string) => {
+  const addTransaction = (id: number, description: string, amount: number, category: string) => {
     const newTransaction: Transaction = {
+      id,
       description,
       amount,
       category,

@@ -1,14 +1,27 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { TextField, Button, Grid, MenuItem, Box, Card, CardContent, Typography } from "@mui/material";
 
 type TransactionFormProps = {
-    onAdd: (description: string, amount: number, category: string) => void;
+    onAdd: (id: number, description: string, amount: number, category: string) => void;
 };
 
 export default function TransactionForm({ onAdd }: TransactionFormProps) {
     const [description, setDescription] = useState("");
     const [amount, setAmount] = useState("");
+    const [categoryList, setCategoryList] = useState<{ id: number, name: string }[]>([]);
     const [category, setCategory] = useState("");
+
+    useEffect(() => {
+        fetch("http://localhost:5000/categories")
+            .then((res) => res.json())
+            .then((data) => {
+                setCategoryList(data);
+                console.log(data);
+            })
+            .catch((err) => console.error(err));
+    }, []);
+
+    const generatedId = (): number => Date.now() + Math.floor(Math.random() * 1000);
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
@@ -16,7 +29,8 @@ export default function TransactionForm({ onAdd }: TransactionFormProps) {
         const numericAmount = Number(amount);
         if (!description || !category || isNaN(numericAmount) || numericAmount === 0) return;
 
-        onAdd(description, numericAmount, category);
+        onAdd(generatedId(), description, numericAmount, category);
+
         setDescription("");
         setAmount("");
         setCategory("");
@@ -51,11 +65,11 @@ export default function TransactionForm({ onAdd }: TransactionFormProps) {
                             value={category}
                             onChange={(e) => setCategory(e.target.value)}
                         >
-                            <MenuItem value="Food">Food</MenuItem>
-                            <MenuItem value="Travel">Travel</MenuItem>
-                            <MenuItem value="Salary">Salary</MenuItem>
-                            <MenuItem value="Shopping">Shopping</MenuItem>
-                            <MenuItem value="Other">Other</MenuItem>
+                            {categoryList.map((cat) => (
+                                <MenuItem key={cat.id} value={cat.name}>
+                                    {cat.name}
+                                </MenuItem>
+                            ))}
                         </TextField>
                         <Button variant="contained" color="success" type="submit" fullWidth>
                             Add Transaction
