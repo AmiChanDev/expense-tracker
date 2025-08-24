@@ -42,18 +42,24 @@ Follow these steps to get the project up and running:
 
 ### 1. Clone the Repository
 
+```
 git clone https://github.com/AmiChanDev/expense-tracker.git
 cd expense-tracker
+```
 
 ### 2. Install Frontend Dependencies
 
+```
 cd frontend
 npm install
+```
 
 ### 3. Install Backend Dependencies
 
+```
 cd ../backend
 npm install
+```
 
 ### 4. Configure Environment Variables
 
@@ -68,15 +74,19 @@ PORT=5000
 
 ### 1. Start the Backend Server
 
+```
 cd backend
 npm start
 The backend API will be available at: http://localhost:5000
+```
 
 ### 2. Start the Frontend Development Server
 
+```
 cd frontend
 npm run dev
 Open your browser and navigate to the URL shown in the terminal (typically http://localhost:5173).
+```
 
 ## 📜 Scripts
 
