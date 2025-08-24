@@ -15,15 +15,17 @@ Track your expenses effortlessly with a modern, user-friendly interface and a se
 ## 📂 Project Structure
 
 ```
-backend/
-├── src/
-│   ├── server.ts        # Entry point
-│   ├── routes/          # API route definitions
-│   └── controllers/     # Request handlers
-├── dist/                # Compiled JS output (after build)
-├── package.json
-├── tsconfig.json
-└── .env
+expense-tracker/
+├── frontend/ # React + Vite frontend
+│ ├── src/
+│ │    ├── routes/
+│ ├── package.json
+│ └── ...
+├── backend/ # Node.js + Express backend
+│ ├── src/
+│ ├── package.json
+│ └── ...
+└── README.md
 ```
 
 ## 🛠️ Prerequisites
