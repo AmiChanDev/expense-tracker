@@ -33,8 +33,15 @@ function App() {
     fetch("http://localhost:5000/categories")
       .then((res) => res.json())
       .then((data) => setCategories(data))
-      .catch((err) => console.error(err));
+      .catch((err) => console.error(err))
   }, []);
+
+  useEffect(() => {
+    fetch("http://localhost:5000/transactions")
+      .then((res) => res.json())
+      .then((data) => setTransactions(data))
+      .catch((err) => console.log(err))
+  }, [])
 
   const income = transactions
     .filter((t) => t.amount > 0)
