@@ -1,16 +1,6 @@
 import { useEffect, useState } from "react";
-import {
-  Card,
-  CardContent,
-  Grid,
-  Typography,
-  List,
-  ListItem,
-  ListItemText,
-  IconButton,
-  Box,
-  Button,
-} from "@mui/material";
+import { Card, CardContent, Grid, Typography, List, ListItem, ListItemText, IconButton, Box, Button } from "@mui/material";
+import { jwtDecode } from "jwt-decode";
 import DeleteIcon from "@mui/icons-material/Delete";
 import Login from "./Login";
 import Register from "./Register";
@@ -27,6 +17,8 @@ type Category = {
   id: number;
   name: string;
 };
+
+type JwtPayload = { userId: number; username: string; exp: number };
 
 function App() {
   const [transactions, setTransactions] = useState<Transaction[]>([]);
@@ -48,6 +40,15 @@ function App() {
   }
 
   //Checks Login
+  let username = "";
+  if (token) {
+    try {
+      const decoded = jwtDecode<JwtPayload>(token);
+      username = decoded.username;
+    } catch {
+      username = "";
+    }
+  }
   if (!token) {
     return (
       <div>
@@ -137,6 +138,9 @@ function App() {
     <Box sx={{ maxWidth: 500, margin: "auto", mt: 4, px: 2 }}>
       <Typography variant="h3" gutterBottom align="center">
         Expense Tracker
+      </Typography>
+      <Typography variant="h6">
+        Logged in as <b>{username}</b>
       </Typography>
       <TransactionForm token={token} onTransactionAdded={fetchTransactions} />
       <Card sx={{ mb: 3 }}>

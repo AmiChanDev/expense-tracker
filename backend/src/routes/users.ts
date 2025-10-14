@@ -30,7 +30,7 @@ router.post("/register", async (req, res) => {
 router.post("/login", async (req, res) => {
   const { username, password } = req.body;
   if (!username || !password)
-    return res.status(400).json({ error: "Username of password required" });
+    return res.status(400).json({ error: "Username or password required" });
 
   const [users] = await db.query<any[]>(
     "SELECT * FROM users where username=?",
