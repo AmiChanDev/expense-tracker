@@ -54,18 +54,22 @@ function App() {
         {showRegister ? (
           <>
             <Register onRegister={() => setShowRegister(false)} />
-            <p>
-              Already have an account?{" "}
-              <button onClick={() => setShowRegister(false)}>Login</button>
-            </p>
+            <Box display="flex" flexDirection="column" alignItems="center" mt={2}>
+              <Typography variant="body1">Already have an account?</Typography>
+              <Button variant="outlined" onClick={() => setShowRegister(false)} sx={{ mt: 1 }}>
+                Login
+              </Button>
+            </Box>
           </>
         ) : (
           <>
             <Login onLogin={handleLogin} />
-            <p>
-              Don't have an account?{" "}
-              <button onClick={() => setShowRegister(true)}>Register</button>
-            </p>
+            <Box display="flex" flexDirection="column" alignItems="center" mt={2}>
+              <Typography variant="body1">Don't have an account?</Typography>
+              <Button variant="outlined" onClick={() => setShowRegister(true)} sx={{ mt: 1 }}>
+                Register
+              </Button>
+            </Box>
           </>
         )}
       </div>

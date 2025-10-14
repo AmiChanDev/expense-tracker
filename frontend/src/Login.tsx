@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Box, Card, CardContent, Typography, TextField, Button, Alert } from "@mui/material";
 
 type Props = {
     onLogin: (token: string) => void;
@@ -32,29 +33,44 @@ export default function Login({ onLogin }: Props) {
     }
 
     return (
-        <form onSubmit={handleSubmit}>
-            <h2>Login</h2>
-            <div>
-                <input
-                    placeholder="Username"
-                    value={username}
-                    onChange={(e) => setUsername(e.target.value)}
-                    required
-                />
-            </div>
-            <div>
-                <input
-                    placeholder="Password"
-                    type="password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    required
-                />
-            </div>
-            <div>
-                {error && <div style={{ color: "red" }}>{error}</div>}
-                <button type="submit">Login</button>
-            </div>
-        </form >
-    )
+        <Box display="flex" justifyContent="center" alignItems="center" minHeight="60vh">
+            <Card sx={{ minWidth: 350, p: 2 }}>
+                <CardContent>
+                    <Typography variant="h4" align="center" gutterBottom>
+                        Login
+                    </Typography>
+                    <Box component="form" onSubmit={handleSubmit} noValidate>
+                        <TextField
+                            label="Username"
+                            value={username}
+                            onChange={e => setUsername(e.target.value)}
+                            fullWidth
+                            margin="normal"
+                            required
+                            autoFocus
+                        />
+                        <TextField
+                            label="Password"
+                            type="password"
+                            value={password}
+                            onChange={e => setPassword(e.target.value)}
+                            fullWidth
+                            margin="normal"
+                            required
+                        />
+                        {error && <Alert severity="error" sx={{ mt: 2 }}>{error}</Alert>}
+                        <Button
+                            type="submit"
+                            variant="contained"
+                            color="primary"
+                            fullWidth
+                            sx={{ mt: 3 }}
+                        >
+                            Login
+                        </Button>
+                    </Box>
+                </CardContent>
+            </Card>
+        </Box>
+    );
 }
