@@ -11,6 +11,11 @@ app.use(express.json());
 app.use("/transactions", transactionsRouter);
 app.use("/users", userRouter);
 
+//workflow
+//GET [{empty array when no transactions exist, return 401 without auth token, return user transactions only}]
+//POST [{create a new transaction, return 400 for missing category_id, return 401 without auth token}]
+//DELTE [{delete a transaction, return 404 for non-existent transaction}]
+
 describe("Transactions API", () => {
   let authToken: string;
   let userId: number;
@@ -43,7 +48,7 @@ describe("Transactions API", () => {
   });
 
   describe("GET /transactions", () => {
-    it("should return empty array when no transactions exist", async () => {
+    it("return empty array when no transactions exist", async () => {
       const response = await request(app)
         .get("/transactions")
         .set("Authorization", `Bearer ${authToken}`);
@@ -52,13 +57,13 @@ describe("Transactions API", () => {
       expect(response.body).toEqual([]);
     });
 
-    it("should return 401 without auth token", async () => {
+    it("return 401 without auth token", async () => {
       const response = await request(app).get("/transactions");
 
       expect(response.status).toBe(401);
     });
 
-    it("should return user transactions only", async () => {
+    it("return user transactions only", async () => {
       // Add a transaction for our test user
       await db.execute(
         "INSERT INTO transactions (id, user_id, description, amount, category_id) VALUES (?, ?, ?, ?, ?)",
@@ -77,7 +82,7 @@ describe("Transactions API", () => {
   });
 
   describe("POST /transactions", () => {
-    it("should create a new transaction successfully", async () => {
+    it("create a new transaction successfully", async () => {
       const transactionData = {
         id: 999,
         description: "New Test Transaction",
@@ -102,7 +107,7 @@ describe("Transactions API", () => {
       expect(transactions[0].amount).toBe(-50.25);
     });
 
-    it("should return 400 for missing category_id", async () => {
+    it("return 400 for missing category_id", async () => {
       const response = await request(app)
         .post("/transactions")
         .set("Authorization", `Bearer ${authToken}`)
@@ -117,7 +122,7 @@ describe("Transactions API", () => {
       expect(response.body.error).toBe("category_id is required");
     });
 
-    it("should return 401 without auth token", async () => {
+    it("return 401 without auth token", async () => {
       const response = await request(app).post("/transactions").send({
         id: 999,
         description: "Unauthorized Transaction",
@@ -141,7 +146,7 @@ describe("Transactions API", () => {
       transactionId = 2001; // Use the ID we provided
     });
 
-    it("should delete a transaction successfully", async () => {
+    it("delete a transaction successfully", async () => {
       const response = await request(app)
         .delete(`/transactions/${transactionId}`)
         .set("Authorization", `Bearer ${authToken}`);
@@ -157,7 +162,7 @@ describe("Transactions API", () => {
       expect(transactions).toHaveLength(0);
     });
 
-    it("should return 404 for non-existent transaction", async () => {
+    it("return 404 for non-existent transaction", async () => {
       const response = await request(app)
         .delete("/transactions/99999")
         .set("Authorization", `Bearer ${authToken}`);

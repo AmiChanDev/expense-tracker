@@ -16,7 +16,7 @@ describe("Authentication API", () => {
   });
 
   describe("POST /users/register", () => {
-    it("should register a new user successfully", async () => {
+    it("register a new user successfully", async () => {
       const response = await request(app).post("/users/register").send({
         username: "test_user_1",
         password: "password123",
@@ -26,7 +26,7 @@ describe("Authentication API", () => {
       expect(response.body.message).toBe("User registered");
     });
 
-    it("should return 400 for missing username", async () => {
+    it("return 400 for missing username", async () => {
       const response = await request(app).post("/users/register").send({
         password: "password123",
       });
@@ -35,7 +35,7 @@ describe("Authentication API", () => {
       expect(response.body.error).toBe("Username or password required");
     });
 
-    it("should return 409 for duplicate username", async () => {
+    it("return 409 for duplicate username", async () => {
       // First registration
       await request(app).post("/users/register").send({
         username: "test_duplicate",
@@ -62,7 +62,7 @@ describe("Authentication API", () => {
       });
     });
 
-    it("should login successfully with correct credentials", async () => {
+    it("login successfully with correct credentials", async () => {
       const response = await request(app).post("/users/login").send({
         username: "test_login_user",
         password: "password123",
@@ -73,7 +73,7 @@ describe("Authentication API", () => {
       expect(typeof response.body.token).toBe("string");
     });
 
-    it("should return 401 for invalid username", async () => {
+    it("return 401 for invalid username", async () => {
       const response = await request(app).post("/users/login").send({
         username: "nonexistent_user",
         password: "password123",
@@ -83,7 +83,7 @@ describe("Authentication API", () => {
       expect(response.body.error).toBe("Invalid credentials");
     });
 
-    it("should return 401 for invalid password", async () => {
+    it("return 401 for invalid password", async () => {
       const response = await request(app).post("/users/login").send({
         username: "test_login_user",
         password: "wrong_password",
