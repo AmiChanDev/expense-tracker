@@ -11,20 +11,25 @@ Track your expenses effortlessly with a modern, user-friendly interface and a se
 - RESTful API: Reliable backend API for smooth data operations.
 - Responsive Design: Built with Material-UI for a polished, mobile-friendly UI.
 - Type Safety: TypeScript ensures robust code on both frontend and backend.
+- Automated Testing: Backend includes Jest and Supertest for API and authentication tests.
 
 ## 📂 Project Structure
 
 ```
 expense-tracker/
 ├── frontend/ # React + Vite frontend
-│ ├── src/
-│ │    ├── routes/
-│ ├── package.json
-│ └── ...
+│   ├── src/
+│   │   ├── routes/
+│   ├── package.json
+│   └── ...
 ├── backend/ # Node.js + Express backend
-│ ├── src/
-│ ├── package.json
-│ └── ...
+│   ├── src/
+│   │   ├── routes/
+│   │   ├── middleware/
+│   │   ├── tests/      # API and authentication tests
+│   ├── package.json
+│   ├── jest.config.js  # Jest configuration for backend tests
+│   └── ...
 └── README.md
 ```
 
@@ -32,9 +37,9 @@ expense-tracker/
 
 Ensure you have the following installed before setting up the project:
 
-- Node.js[](https://nodejs.org/) (v18+ recommended)
-- npm[](https://www.npmjs.com/)
-- MySQL[](https://www.mysql.com/) server (running locally or remotely)
+- [Node.js](https://nodejs.org/) (v18+ recommended)
+- [npm](https://www.npmjs.com/)
+- [MySQL](https://www.mysql.com/) server (running locally or remotely)
 
 ## ⚙️ Installation
 
@@ -42,21 +47,21 @@ Follow these steps to get the project up and running:
 
 ### 1. Clone the Repository
 
-```
+```sh
 git clone https://github.com/AmiChanDev/expense-tracker.git
 cd expense-tracker
 ```
 
 ### 2. Install Frontend Dependencies
 
-```
+```sh
 cd frontend
 npm install
 ```
 
 ### 3. Install Backend Dependencies
 
-```
+```sh
 cd ../backend
 npm install
 ```
@@ -76,19 +81,31 @@ Create a .env file in the backend/ directory with your MySQL credentials:
 
 ### 1. Start the Backend Server
 
-```
+```sh
 cd backend
 npm start
-The backend API will be available at: http://localhost:5000
+# The backend API will be available at: http://localhost:5000
 ```
 
 ### 2. Start the Frontend Development Server
 
-```
+```sh
 cd frontend
 npm run dev
-Open your browser and navigate to the URL shown in the terminal (typically http://localhost:5173).
+# Open your browser and navigate to the URL shown in the terminal (typically http://localhost:5173).
 ```
+
+## 🧪 Running Backend Tests
+
+The backend uses Jest and Supertest for API and authentication testing.
+
+```sh
+cd backend
+npm test
+```
+
+- Test files are located in `backend/src/tests/`.
+- Jest configuration is in `backend/jest.config.js`.
 
 ## 📜 Scripts
 
@@ -106,6 +123,7 @@ Open your browser and navigate to the URL shown in the terminal (typically http:
 | Command   | Description                            |
 | --------- | -------------------------------------- |
 | npm start | Starts the backend server with ts-node |
+| npm test  | Runs backend tests with Jest           |
 
 ## 🤝 Contributing
 
@@ -126,8 +144,8 @@ This project is licensed under the MIT License. See the LICENSE file for details
 
 ## 🌟 Acknowledgments
 
-- Built with love by AmiChanDev[](https://github.com/AmiChanDev).
-- Powered by React[](https://reactjs.org/), Vite[](https://vitejs.dev/), Material-UI[](https://mui.com/), Node.js[](https://nodejs.org/), Express[](https://expressjs.com/), and MySQL[](https://www.mysql.com/).
+- Built with love by [AmiChanDev](https://github.com/AmiChanDev).
+- Powered by [React](https://reactjs.org/), [Vite](https://vitejs.dev/), [Material-UI](https://mui.com/), [Node.js](https://nodejs.org/), [Express](https://expressjs.com/), and [MySQL](https://www.mysql.com/).
 
 ---
 
