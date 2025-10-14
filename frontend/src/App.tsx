@@ -12,6 +12,8 @@ import {
   Box,
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
+import Login from "./Login";
+import Register from "./Register";
 
 type Transaction = {
   id: number;
@@ -29,19 +31,63 @@ function App() {
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
 
+  const [token, setToken] = useState<string | null>(() => localStorage.getItem("token"));
+  const [showRegister, setShowRegister] = useState(false);
+
+  const handleLogin = (token: string) => {
+    setToken(token);
+    localStorage.setItem("token", token)
+  }
+
+  const handleLogout = () => {
+    setToken(null);
+    localStorage.removeItem("token");
+  }
+
+  //Checks Login
+  if (!token) {
+    return (
+      <div>
+        {showRegister ? (
+          <>
+            <Register onRegister={() => setShowRegister(false)} />
+            <p>
+              Already have an account?{" "}
+              <button onClick={() => setShowRegister(false)}>Login</button>
+            </p>
+          </>
+        ) : (
+          <>
+            <Login onLogin={handleLogin} />
+            <p>
+              Don't have an account?{" "}
+              <button onClick={() => setShowRegister(true)}>Register</button>
+            </p>
+          </>
+        )}
+      </div>
+    );
+  }
+
   useEffect(() => {
-    fetch("http://localhost:5000/categories")
+    if (!token) return;
+    fetch("http://localhost:5000/categories", {
+      headers: { Authorization: `Bearer ${token}` }
+    })
       .then((res) => res.json())
       .then((data) => setCategories(data))
       .catch((err) => console.error(err))
-  }, []);
+  }, [token]);
 
   useEffect(() => {
-    fetch("http://localhost:5000/transactions")
+    if (!token) return;
+    fetch("http://localhost:5000/transactions", {
+      headers: { Authorization: `Bearer ${token}` }
+    })
       .then((res) => res.json())
       .then((data) => setTransactions(data))
       .catch((err) => console.log(err))
-  }, [])
+  }, [token])
 
   const income = transactions
     .filter((t) => t.amount > 0)
@@ -62,7 +108,10 @@ function App() {
     try {
       const res = await fetch("http://localhost:5000/transactions", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`
+        },
         body: JSON.stringify({ id, description, amount, category_id }),
       });
 
@@ -72,7 +121,6 @@ function App() {
         console.error("Error: Failed to add transaction");
         throw new Error("Failed to add transaction");
       }
-
 
       setTransactions((prev) => [
         ...prev,
@@ -87,6 +135,7 @@ function App() {
     try {
       const res = await fetch(`http://localhost:5000/transactions/${id}`, {
         method: "DELETE",
+        headers: { Authorization: `Bearer ${token}` }
       });
 
       if (!res.ok) {

@@ -1,10 +1,11 @@
 import { Router } from "express";
 import { db } from "../db.js";
 import type { RowDataPacket } from "mysql2";
+import { authenticateToken } from "../middleware/auth.js";
 
 const router = Router();
 
-router.get("/", async (req, res) => {
+router.get("/", authenticateToken, async (req, res) => {
   try {
     const [categoryRows] = await db.query<RowDataPacket[]>(
       "SELECT * FROM category"

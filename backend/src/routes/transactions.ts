@@ -1,11 +1,12 @@
 import { Router } from "express";
 import { db } from "../db.js";
 import type { RowDataPacket, OkPacket } from "mysql2";
+import { authenticateToken } from "../middleware/auth.js";
 
 const router = Router();
 
 // GET all transactions
-router.get("/", async (req, res) => {
+router.get("/", authenticateToken, async (req, res) => {
   try {
     const [rows] = await db.query<RowDataPacket[]>(
       "SELECT * FROM transactions"
@@ -19,7 +20,7 @@ router.get("/", async (req, res) => {
 });
 
 // POST a new transaction
-router.post("/", async (req, res) => {
+router.post("/", authenticateToken, async (req, res) => {
   try {
     const { id, description, amount, category_id } = req.body;
 
@@ -41,7 +42,7 @@ router.post("/", async (req, res) => {
 });
 
 // DELETE a transaction
-router.delete("/:id", async (req, res) => {
+router.delete("/:id", authenticateToken, async (req, res) => {
   try {
     const { id } = req.params;
     const [result] = await db.query<OkPacket>(

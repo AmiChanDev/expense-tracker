@@ -64,11 +64,13 @@ npm install
 ### 4. Configure Environment Variables
 
 Create a .env file in the backend/ directory with your MySQL credentials:
-DB_HOST=localhost
-DB_USER=root
-DB_PASSWORD=your_password
-DB_NAME=expense_tracker
-PORT=5000
+
+- DB_HOST=localhost
+- DB_USER=root
+- DB_PASSWORD=your_password
+- DB_NAME=expense_tracker
+- PORT=5000
+- JWT_SECRET=your JWT secret
 
 ## 🚀 Running the Project
 
