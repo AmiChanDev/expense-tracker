@@ -2,35 +2,61 @@ import { useState, useEffect } from "react";
 import { TextField, Button, Grid, MenuItem, Box, Card, CardContent, Typography } from "@mui/material";
 
 type TransactionFormProps = {
-    onAdd: (id: number, description: string, amount: number, category_id: number) => void;
+    token: string;
+    onTransactionAdded: () => void;
 };
 
-export default function TransactionForm({ onAdd }: TransactionFormProps) {
+
+export default function TransactionForm({ token, onTransactionAdded }: TransactionFormProps) {
     const [description, setDescription] = useState("");
     const [amount, setAmount] = useState("");
     const [categoryList, setCategoryList] = useState<{ id: number, name: string }[]>([]);
     const [category_id, setCategory_id] = useState<number | null>(null);
+    const [error, setError] = useState("");
 
     useEffect(() => {
-        fetch("http://localhost:5000/categories")
+        fetch("http://localhost:5000/categories", {
+            headers: { Authorization: `Bearer ${token}` }
+        })
             .then((res) => res.json())
-            .then((data) => setCategoryList(data))
-            .catch((err) => console.error(err));
-    }, []);
+            .then((data) => setCategoryList(Array.isArray(data) ? data : []))
+            .catch((err) => {
+                setCategoryList([]);
+                console.error(err);
+            });
+    }, [token]);
 
-    const generatedId = (): number => Date.now() + Math.floor(Math.random() * 1000);
-
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-
+        setError("");
         const numericAmount = Number(amount);
         if (!description || category_id === null || isNaN(numericAmount) || numericAmount === 0) return;
 
-        onAdd(generatedId(), description, numericAmount, category_id);
-
-        setDescription("");
-        setAmount("");
-        setCategory_id(null);
+        try {
+            const res = await fetch("http://localhost:5000/transactions", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`
+                },
+                body: JSON.stringify({
+                    id: Date.now() + Math.floor(Math.random() * 1000),
+                    description,
+                    amount: numericAmount,
+                    category_id
+                })
+            });
+            if (!res.ok) {
+                setError("Failed to add transaction");
+                return;
+            }
+            setDescription("");
+            setAmount("");
+            setCategory_id(null);
+            onTransactionAdded();
+        } catch (err) {
+            setError("Network error");
+        }
     };
 
     return (
@@ -81,6 +107,7 @@ export default function TransactionForm({ onAdd }: TransactionFormProps) {
                             </Button>
                         </Grid>
                     </Grid>
+                    {error && <Typography color="error">{error}</Typography>}
                 </Box>
             </CardContent>
         </Card>

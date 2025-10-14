@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import TransactionForm from "./TransactionForm";
 import {
   Card,
   CardContent,
@@ -10,10 +9,12 @@ import {
   ListItemText,
   IconButton,
   Box,
+  Button,
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import Login from "./Login";
 import Register from "./Register";
+import TransactionForm from "./TransactionForm";
 
 type Transaction = {
   id: number;
@@ -37,11 +38,13 @@ function App() {
   const handleLogin = (token: string) => {
     setToken(token);
     localStorage.setItem("token", token)
+    window.location.reload();
   }
 
   const handleLogout = () => {
     setToken(null);
     localStorage.removeItem("token");
+    window.location.reload();
   }
 
   //Checks Login
@@ -79,7 +82,7 @@ function App() {
       .catch((err) => console.error(err))
   }, [token]);
 
-  useEffect(() => {
+  const fetchTransactions = () => {
     if (!token) return;
     fetch("http://localhost:5000/transactions", {
       headers: { Authorization: `Bearer ${token}` }
@@ -87,7 +90,11 @@ function App() {
       .then((res) => res.json())
       .then((data) => setTransactions(data))
       .catch((err) => console.log(err))
-  }, [token])
+  };
+
+  useEffect(() => {
+    fetchTransactions();
+  }, [token]);
 
   const income = transactions
     .filter((t) => t.amount > 0)
@@ -98,38 +105,6 @@ function App() {
     .reduce((total, t) => total + t.amount, 0);
 
   const balance = income + expenses;
-
-  const addTransaction = async (
-    id: number,
-    description: string,
-    amount: number,
-    category_id: number
-  ) => {
-    try {
-      const res = await fetch("http://localhost:5000/transactions", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`
-        },
-        body: JSON.stringify({ id, description, amount, category_id }),
-      });
-
-      const data = await res.json();
-
-      if (!res.ok) {
-        console.error("Error: Failed to add transaction");
-        throw new Error("Failed to add transaction");
-      }
-
-      setTransactions((prev) => [
-        ...prev,
-        { id: data.id, description, amount, category_id },
-      ]);
-    } catch (err) {
-      console.error(err);
-    }
-  };
 
   const deleteTransaction = async (id: number) => {
     try {
@@ -159,9 +134,7 @@ function App() {
       <Typography variant="h3" gutterBottom align="center">
         Expense Tracker
       </Typography>
-
-      <TransactionForm onAdd={addTransaction} />
-
+      <TransactionForm token={token} onTransactionAdded={fetchTransactions} />
       <Card sx={{ mb: 3 }}>
         <CardContent>
           <Typography variant="h5" gutterBottom>
@@ -207,6 +180,12 @@ function App() {
             </Grid>
           </Grid>
         </CardContent>
+      </Card>
+
+      <Card>
+        <Button onClick={handleLogout}>
+          Logout
+        </Button>
       </Card>
     </Box>
   );
