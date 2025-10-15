@@ -14,5 +14,5 @@ app.use("/transactions", transactionsRouter);
 app.use("/categories", categoryRouter);
 app.use("/users", userRouter);
 
-const PORT = 5000;
+const PORT = 3000;
 app.listen(PORT, () => console.log(`Server is listening on ${PORT}`));

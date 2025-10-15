@@ -74,7 +74,7 @@ Create a .env file in the backend/ directory with your MySQL credentials:
 - DB_USER=root
 - DB_PASSWORD=your_password
 - DB_NAME=expense_tracker
-- PORT=5000
+- PORT=3000
 - JWT_SECRET=your JWT secret
 
 ## 🚀 Running the Project
@@ -84,7 +84,7 @@ Create a .env file in the backend/ directory with your MySQL credentials:
 ```sh
 cd backend
 npm start
-# The backend API will be available at: http://localhost:5000
+# The backend API will be available at: http://localhost:3000
 ```
 
 ### 2. Start the Frontend Development Server
