@@ -55,4 +55,33 @@ router.post("/login", async (req, res) => {
   res.json({ token });
 });
 
+// Cleanup endpoint - Delete test users
+router.delete("/cleanup", async (req, res) => {
+  try {
+    const pattern = req.query.pattern || "test_%";
+
+    // First, delete all transactions for test users
+    await db.execute(
+      `DELETE t FROM transactions t 
+       INNER JOIN users u ON t.user_id = u.id 
+       WHERE u.username LIKE ?`,
+      [pattern]
+    );
+
+    // Then delete the test users
+    const [result] = await db.execute<any>(
+      "DELETE FROM users WHERE username LIKE ?",
+      [pattern]
+    );
+
+    res.json({
+      message: "Cleanup completed",
+      deletedUsers: result.affectedRows,
+    });
+  } catch (error) {
+    console.error("Cleanup error:", error);
+    res.status(500).json({ error: "Cleanup failed" });
+  }
+});
+
 export default router;
